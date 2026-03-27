@@ -1,0 +1,299 @@
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;600;700&display=swap"); /* Importa as fontes usadas no layout. */
+
+:root {
+	--bg-1: #0b0b0b; /* Cor base mais escura do fundo. */
+	--bg-2: #141414; /* Cor intermediaria do fundo. */
+	--bg-3: #1f1f1f; /* Cor final do degradê de fundo. */
+	--text-main: #f5f5f1; /* Cor principal dos textos. */
+	--text-muted: #b3b3b3; /* Cor secundaria para textos de apoio. */
+	--brand: #e50914; /* Vermelho principal da marca (destaques). */
+	--brand-soft: #ff2b2b; /* Vermelho mais claro para foco/acento. */
+	--surface: rgba(255, 255, 255, 0.08); /* Cor base de superficie para componentes. */
+	--surface-border: rgba(255, 255, 255, 0.18); /* Cor da borda de componentes em destaque. */
+	--surface-hover: rgba(255, 255, 255, 0.15); /* Cor de hover para componentes interativos. */
+	--image-shadow: 0 12px 24px rgba(0, 0, 0, 0.45); /* Sombra base dos avatares no tema escuro. */
+	--card-size: 160px; /* Tamanho padrao de largura/altura dos avatares. */
+}
+
+* {
+	box-sizing: border-box; /* Inclui borda e padding no calculo final de tamanho. */
+}
+
+html,
+body {
+	margin: 0; /* Remove margem padrao do navegador. */
+	min-height: 100%; /* Garante altura minima ocupando a viewport. */
+}
+
+body {
+	font-family: "Montserrat", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; /* Define a familia tipografica principal. */
+	color: var(--text-main); /* Define a cor base dos textos da pagina. */
+	background:
+		radial-gradient(circle at 20% 10%, rgba(229, 9, 20, 0.24) 0%, transparent 34%), /* Mancha de luz vermelha no topo esquerdo. */
+		radial-gradient(circle at 80% 90%, rgba(229, 9, 20, 0.18) 0%, transparent 28%), /* Mancha de luz vermelha no canto inferior direito. */
+		linear-gradient(160deg, var(--bg-1) 0%, var(--bg-2) 55%, var(--bg-3) 100%); /* Degradê principal escuro de fundo. */
+	display: grid; /* Usa grid para centralizacao simples do conteudo. */
+	place-items: center; /* Centraliza o conteudo horizontal e verticalmente. */
+	overflow-x: hidden; /* Evita rolagem horizontal acidental. */
+	transition: color 240ms ease, background 260ms ease; /* Suaviza a troca visual entre temas. */
+}
+
+body[data-theme="light"] {
+	--bg-1: #f3f4f8; /* Cor inicial clara de fundo. */
+	--bg-2: #e6eaf2; /* Cor intermediaria clara de fundo. */
+	--bg-3: #d7deea; /* Cor final clara de fundo. */
+	--text-main: #16181d; /* Cor principal de texto no modo claro. */
+	--text-muted: #4f5968; /* Cor secundaria de texto no modo claro. */
+	--brand-soft: #c4000a; /* Ajusta contraste do foco no modo claro. */
+	--surface: rgba(255, 255, 255, 0.72); /* Fundo dos componentes em tema claro. */
+	--surface-border: rgba(22, 24, 29, 0.2); /* Borda dos componentes no tema claro. */
+	--surface-hover: rgba(255, 255, 255, 0.96); /* Hover dos componentes no tema claro. */
+	--image-shadow: 0 10px 20px rgba(25, 35, 53, 0.24); /* Sombra mais leve para avatares em tema claro. */
+}
+
+main {
+	width: min(900px, 92vw); /* Limita largura maxima e adapta em telas menores. */
+	padding: 5rem 1rem 3rem; /* Define espacamento interno superior/lateral/inferior. */
+}
+
+.theme-actions {
+	display: flex; /* Permite alinhar o botao de tema horizontalmente. */
+	justify-content: flex-end; /* Posiciona o botao no canto direito da area principal. */
+	margin-bottom: 1.25rem; /* Cria separacao entre acao de tema e titulo. */
+}
+
+.theme-toggle {
+	position: relative; /* Permite posicionar o indicador deslizante do toggle. */
+	width: 64px; /* Largura do toggle para leitura visual clara do estado. */
+	height: 34px; /* Altura do toggle mantendo area de toque confortavel. */
+	border: 1px solid var(--surface-border); /* Delimita o botao com contraste suave. */
+	background: linear-gradient(135deg, var(--surface), var(--surface-hover)); /* Destaca visualmente o trilho do toggle. */
+	padding: 0; /* Remove area extra para manter formato de switch. */
+	border-radius: 999px; /* Estilo de pílula para o botao. */
+	appearance: none; /* Remove estilo nativo para controle total do switch. */
+	cursor: pointer; /* Indica interacao no botao. */
+	transition: background-color 200ms ease, border-color 200ms ease, transform 200ms ease, box-shadow 200ms ease; /* Suaviza feedback do botao. */
+}
+
+.theme-toggle::before {
+	content: ""; /* Cria o indicador circular do toggle. */
+	position: absolute; /* Posiciona o indicador dentro do trilho. */
+	top: 3px; /* Alinha verticalmente o indicador. */
+	left: 3px; /* Posicao inicial para tema escuro. */
+	width: 26px; /* Tamanho do indicador. */
+	height: 26px; /* Tamanho do indicador. */
+	border-radius: 50%; /* Mantem indicador circular. */
+	background: #f5f5f1; /* Cor clara do indicador para contraste no fundo escuro. */
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35); /* Da profundidade ao indicador. */
+	transition: transform 220ms ease, background-color 220ms ease; /* Suaviza deslocamento entre estados. */
+}
+
+.theme-toggle::after {
+	content: "🌙"; /* Exibe lua para representar o modo escuro. */
+	position: absolute; /* Sobrepoe o simbolo ao trilho do toggle. */
+	inset: 0; /* Centraliza em toda a area do botao. */
+	display: grid; /* Facilita centralizacao do simbolo. */
+	place-items: center; /* Centraliza o simbolo no toggle. */
+	font-size: 0.95rem; /* Define tamanho equilibrado do simbolo. */
+	line-height: 1; /* Evita desalinhamento vertical por altura de linha. */
+	pointer-events: none; /* Garante clique apenas no botao base. */
+	transition: transform 220ms ease; /* Suaviza leve deslocamento entre estados. */
+}
+
+.theme-toggle[data-mode="light"]::before {
+	transform: translateX(30px); /* Move indicador para direita no modo claro. */
+	background: #ffffff; /* Refina contraste do indicador no tema claro. */
+}
+
+.theme-toggle[data-mode="light"]::after {
+	content: "☀"; /* Exibe sol para representar o modo claro. */
+	transform: translateX(-10px); /* Compensa visualmente o espaco do indicador a direita. */
+}
+
+.theme-toggle[data-mode="dark"]::after {
+	transform: translateX(10px); /* Compensa visualmente o espaco do indicador a esquerda. */
+}
+
+.theme-toggle:hover {
+	background: var(--surface-hover); /* Realca o botao no hover. */
+	transform: translateY(-1px); /* Da feedback de elevacao leve no hover. */
+	box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18); /* Destaca o toggle ao passar o mouse. */
+}
+
+.theme-toggle:focus-visible {
+	outline: 2px solid var(--brand-soft); /* Mantem acessibilidade para navegacao por teclado. */
+	outline-offset: 3px; /* Afasta o contorno do elemento principal. */
+}
+
+section {
+	text-align: center; /* Centraliza o texto interno da secao. */
+}
+
+.profile-groups {
+	margin: 0; /* Remove margem padrao da lista externa. */
+	padding: 0; /* Remove recuo padrao da lista externa. */
+	list-style: none; /* Remove marcador da lista externa. */
+}
+
+h1 {
+	margin: 0; /* Remove margem padrao do titulo. */
+	font-family: "Bebas Neue", Impact, sans-serif; /* Usa fonte de destaque no titulo. */
+	font-size: clamp(2rem, 2.2vw + 1.2rem, 3rem); /* Torna o tamanho do titulo responsivo com limites. */
+	font-weight: 400; /* Define peso visual regular para a fonte display. */
+	letter-spacing: 0.05em; /* Aumenta espacamento entre letras para estilo cinematografico. */
+	animation: rise-in 700ms ease-out both; /* Aplica animacao de entrada suave no titulo. */
+}
+
+.profiles {
+	margin: 2.8rem 0 0; /* Cria espaco acima da grade de perfis. */
+	padding: 0; /* Remove padding padrao da lista. */
+	list-style: none; /* Remove marcadores padrao da lista. */
+	display: grid; /* Organiza os perfis em grade. */
+	grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); /* Cria colunas responsivas com largura minima de 170px. */
+	gap: 1.5rem; /* Define espaco entre os itens da grade. */
+	justify-items: center; /* Centraliza cada item dentro da propria coluna. */
+}
+
+.profile {
+	width: 100%; /* Faz o item ocupar toda a largura disponivel da coluna. */
+	max-width: 190px; /* Limita a largura maxima de cada card de perfil. */
+	animation: rise-in 700ms ease-out both; /* Aplica animacao de entrada em cada perfil. */
+}
+
+.profile:nth-child(2) {
+	animation-delay: 120ms; /* Atraso no segundo item para efeito de entrada em cascata. */
+}
+
+.profile button {
+	width: 100%; /* Faz o botao cobrir toda a area do card. */
+	border: 0; /* Remove borda padrao do botao. */
+	padding: 0; /* Remove padding padrao do botao. */
+	background: transparent; /* Deixa o fundo do botao transparente. */
+	color: inherit; /* Herda cor de texto do elemento pai. */
+	cursor: pointer; /* Mostra cursor de clique em hover. */
+}
+
+.profile figure {
+	margin: 0; /* Remove margem padrao do figure. */
+}
+
+.profile img {
+	width: var(--card-size); /* Define largura da imagem via variavel. */
+	height: var(--card-size); /* Define altura da imagem via variavel. */
+	border-radius: 8px; /* Arredonda os cantos da imagem. */
+	border: 3px solid transparent; /* Reserva borda para destaque sem mudar layout. */
+	object-fit: cover; /* Garante preenchimento da area sem distorcer proporcao. */
+	transition: transform 260ms ease, border-color 260ms ease, box-shadow 260ms ease; /* Suaviza mudancas visuais em hover/foco. */
+	box-shadow: var(--image-shadow); /* Adiciona sombra para profundidade do card em cada tema. */
+}
+
+.profile figcaption {
+	margin-top: 0.85rem; /* Cria espaco entre avatar e nome do perfil. */
+	font-size: 1rem; /* Define tamanho do texto da legenda. */
+	color: var(--text-muted); /* Usa cor secundaria na legenda em estado normal. */
+	transition: color 220ms ease, letter-spacing 220ms ease; /* Suaviza mudancas de cor e espacamento da legenda. */
+}
+
+.profile button:hover img,
+.profile button:focus-visible img {
+	transform: translateY(-4px) scale(1.03); /* Move e amplia levemente a imagem no destaque. */
+	border-color: var(--brand); /* Colore a borda com vermelho da marca. */
+	box-shadow: 0 20px 38px rgba(229, 9, 20, 0.35); /* Intensifica sombra com tom vermelho em destaque. */
+}
+
+.profile button:hover figcaption,
+.profile button:focus-visible figcaption {
+	color: var(--text-main); /* Torna o texto da legenda mais contrastante no destaque. */
+	letter-spacing: 0.01em; /* Ajusta levemente o espacamento da legenda no destaque. */
+}
+
+.profile button:focus-visible {
+	outline: 2px solid var(--brand-soft); /* Exibe contorno visivel para navegacao por teclado. */
+	outline-offset: 7px; /* Afasta o contorno para nao colar no card. */
+	border-radius: 10px; /* Mantem contorno com cantos arredondados. */
+}
+
+@keyframes rise-in {
+	from {
+		opacity: 0; /* Inicia transparente. */
+		transform: translateY(14px); /* Inicia levemente abaixo da posicao final. */
+	}
+
+	to {
+		opacity: 1; /* Termina totalmente visivel. */
+		transform: translateY(0); /* Termina na posicao original. */
+	}
+}
+
+
+@media (min-width: 1200px) {
+	main {
+		width: min(1080px, 90vw); /* Aproveita melhor espaco horizontal em telas grandes. */
+	}
+
+	.profiles {
+		grid-template-columns: repeat(4, minmax(170px, 1fr)); /* Mantem quatro perfis lado a lado no desktop largo. */
+		gap: 2rem; /* Aumenta respiro entre cards em telas amplas. */
+	}
+}
+
+@media (max-width: 900px) {
+	main {
+		width: min(760px, 94vw); /* Ajusta area util para tablets e notebooks menores. */
+		padding-top: 4rem; /* Reduz espaco superior para equilibrar composicao. */
+	}
+
+	.profiles {
+		grid-template-columns: repeat(2, minmax(150px, 1fr)); /* Organiza perfis em duas colunas no tablet. */
+		margin-top: 2.4rem; /* Aproxima titulo da grade. */
+	}
+
+	:root {
+		--card-size: 145px; /* Diminui avatares para caber melhor em larguras intermediarias. */
+	}
+}
+
+@media (max-width: 600px) {
+	main {
+		padding-top: 3.2rem; /* Reduz espaco superior em telas pequenas. */
+		padding-bottom: 2rem; /* Mantem conteudo bem distribuido no mobile. */
+	}
+
+	.theme-actions {
+		justify-content: center; /* Centraliza controle de tema em telas pequenas. */
+		margin-bottom: 1rem; /* Ajusta separacao para caber melhor no mobile. */
+	}
+
+	.profiles {
+		grid-template-columns: repeat(2, minmax(120px, 1fr)); /* Mantem duas colunas em celulares padrao. */
+		margin-top: 2.2rem; /* Reduz distancia entre titulo e lista no mobile. */
+		gap: 1.2rem; /* Diminui espacamento entre cards no mobile. */
+	}
+
+	:root {
+		--card-size: 130px; /* Reduz tamanho do avatar para caber melhor em telas pequenas. */
+	}
+
+	.profile {
+		max-width: 160px; /* Ajusta largura maxima do card no mobile. */
+	}
+}
+
+@media (max-width: 420px) {
+	h1 {
+		font-size: clamp(1.7rem, 4.2vw + 0.95rem, 2.2rem); /* Evita quebra agressiva do titulo em telas muito estreitas. */
+	}
+
+	.profiles {
+		grid-template-columns: 1fr; /* Empilha perfis em uma coluna em celulares pequenos. */
+		gap: 1rem; /* Compacta espacos para reduzir rolagem excessiva. */
+	}
+
+	:root {
+		--card-size: 120px; /* Ajuste final do avatar para aparelhos compactos. */
+	}
+
+	.profile {
+		max-width: 180px; /* Mantem largura agradavel mesmo com uma coluna. */
+	}
+}
