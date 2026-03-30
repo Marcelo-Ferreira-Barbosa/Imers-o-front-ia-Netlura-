@@ -26,6 +26,7 @@ body {
 }
 
 body {
+	min-height: 100dvh; /* Ajusta altura real em navegadores moveis modernos. */
 	font-family: "Montserrat", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; /* Define a familia tipografica principal. */
 	color: var(--text-main); /* Define a cor base dos textos da pagina. */
 	background:
@@ -36,6 +37,19 @@ body {
 	place-items: center; /* Centraliza o conteudo horizontal e verticalmente. */
 	overflow-x: hidden; /* Evita rolagem horizontal acidental. */
 	transition: color 240ms ease, background 260ms ease; /* Suaviza a troca visual entre temas. */
+}
+
+body::before {
+	content: ""; /* Cria vinheta para aproximar look cinematografico da Netflix. */
+	position: fixed;
+	inset: 0;
+	pointer-events: none;
+	background: radial-gradient(circle at center, transparent 55%, rgba(0, 0, 0, 0.52) 100%);
+	z-index: -1;
+}
+
+body.intro-active {
+	overflow: hidden; /* Bloqueia rolagem enquanto o overlay de introducao esta ativo. */
 }
 
 body[data-theme="light"] {
@@ -52,8 +66,69 @@ body[data-theme="light"] {
 }
 
 main {
-	width: min(900px, 92vw); /* Limita largura maxima e adapta em telas menores. */
-	padding: 5rem 1rem 3rem; /* Define espacamento interno superior/lateral/inferior. */
+	width: min(980px, 92vw); /* Limita largura maxima e adapta em telas menores. */
+	padding: clamp(3rem, 7vh, 5rem) max(1rem, env(safe-area-inset-right)) 3rem max(1rem, env(safe-area-inset-left)); /* Define espacamento interno fluido e seguro. */
+	transition: opacity 700ms ease, transform 700ms ease, filter 700ms ease; /* Suaviza entrada do conteudo principal apos a intro. */
+}
+
+body.intro-active main {
+	opacity: 0; /* Mantem conteudo oculto durante introducao. */
+	transform: translateY(16px) scale(0.985); /* Aplica leve deslocamento para revelar com profundidade. */
+	filter: blur(6px); /* Cria transicao mais cinematografica na revelacao. */
+	pointer-events: none; /* Evita interacao com elementos atras do overlay. */
+}
+
+.intro-screen {
+	position: fixed; /* Fixa a introducao ocupando toda a viewport. */
+	inset: 0; /* Garante preenchimento em 100% da tela. */
+	min-height: 100dvh; /* Usa altura dinamica em dispositivos moveis. */
+	z-index: 40; /* Mantem introducao acima de todo o conteudo. */
+	display: grid; /* Facilita centralizacao do bloco da marca. */
+	place-items: center; /* Centraliza conteudo da introducao. */
+	background:
+		radial-gradient(circle at 20% 18%, rgba(229, 9, 20, 0.38) 0%, transparent 36%),
+		radial-gradient(circle at 78% 84%, rgba(229, 9, 20, 0.3) 0%, transparent 30%),
+		linear-gradient(150deg, #050505 0%, #0f0f0f 55%, #171717 100%);
+	overflow: hidden; /* Evita vazamento visual de efeitos na intro. */
+	animation: intro-fade 600ms ease-out both; /* Entrada inicial suave do overlay. */
+}
+
+.intro-screen.is-leaving {
+	animation: intro-out 700ms ease forwards; /* Remove introducao com dissolucao suave. */
+}
+
+.intro-brand {
+	text-align: center; /* Centraliza os textos de marca. */
+	padding: 1rem; /* Cria respiro interno para telas pequenas. */
+	animation: intro-brand-in 1250ms cubic-bezier(0.2, 0.7, 0.1, 1) both; /* Entranda fluida da marca. */
+}
+
+.intro-kicker {
+	margin: 0; /* Remove margem padrao do paragrafo. */
+	font-family: "Bebas Neue", Impact, sans-serif; /* Destaca assinatura visual da introducao. */
+	font-size: clamp(2.2rem, 8vw, 5.4rem); /* Mantem escala forte em desktop e mobile. */
+	letter-spacing: 0.2em; /* Cria sensacao de abertura cinematografica. */
+	color: #ff2b2b; /* Mantem acento vibrante da marca. */
+	text-shadow: 0 14px 35px rgba(229, 9, 20, 0.34); /* Reforca profundidade do texto principal. */
+}
+
+.intro-brand h2 {
+	margin: 0.4rem 0 0; /* Aproxima subtitulo da marca. */
+	font-size: clamp(0.95rem, 1.8vw, 1.2rem); /* Escala responsiva para texto secundario. */
+	font-weight: 600; /* Da destaque sem competir com titulo principal. */
+	letter-spacing: 0.08em; /* Harmoniza com o espaçamento da marca. */
+	text-transform: uppercase; /* Mantem consistencia visual com identidade. */
+	color: rgba(245, 245, 241, 0.9); /* Cor clara com contraste suave. */
+}
+
+.intro-line {
+	width: min(280px, 64vw); /* Barra responsiva sem extrapolar em mobile. */
+	height: 3px; /* Altura enxuta para indicador elegante. */
+	margin: 1.05rem auto 0; /* Separa a barra do subtitulo. */
+	border-radius: 999px; /* Mantem formato pill da barra. */
+	background: linear-gradient(90deg, rgba(229, 9, 20, 0) 0%, rgba(229, 9, 20, 0.94) 48%, rgba(229, 9, 20, 0) 100%); /* Simula varredura de energia. */
+	transform-origin: left center; /* Ponto de origem da animacao de progresso. */
+	animation: intro-progress 1500ms ease-out both; /* Barra cresce em sincronia com a intro. */
 }
 
 .theme-actions {
@@ -149,7 +224,7 @@ h1 {
 	padding: 0; /* Remove padding padrao da lista. */
 	list-style: none; /* Remove marcadores padrao da lista. */
 	display: grid; /* Organiza os perfis em grade. */
-	grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); /* Cria colunas responsivas com largura minima de 170px. */
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 165px), 1fr)); /* Cria colunas fluidas para caber melhor em largura intermediaria. */
 	gap: 1.5rem; /* Define espaco entre os itens da grade. */
 	justify-items: center; /* Centraliza cada item dentro da propria coluna. */
 }
@@ -158,6 +233,7 @@ h1 {
 	width: 100%; /* Faz o item ocupar toda a largura disponivel da coluna. */
 	max-width: 190px; /* Limita a largura maxima de cada card de perfil. */
 	animation: rise-in 700ms ease-out both; /* Aplica animacao de entrada em cada perfil. */
+	transition: transform 240ms ease; /* Suaviza destaque de cada card no hover. */
 }
 
 .profile:nth-child(2) {
@@ -225,6 +301,55 @@ h1 {
 	}
 }
 
+@keyframes intro-fade {
+	from {
+		opacity: 0; /* Inicia com transicao suave de opacidade. */
+	}
+
+	to {
+		opacity: 1; /* Finaliza totalmente visivel. */
+	}
+}
+
+@keyframes intro-brand-in {
+	from {
+		opacity: 0; /* Comeca discreto antes do destaque da marca. */
+		transform: translateY(18px) scale(0.97); /* Sobe e amplia levemente ao aparecer. */
+		filter: blur(3px); /* Retira leve desfoque durante a entrada. */
+	}
+
+	to {
+		opacity: 1; /* Garante leitura completa da marca. */
+		transform: translateY(0) scale(1); /* Fecha transicao no ponto final. */
+		filter: blur(0); /* Remove desfoque ao finalizar a animacao. */
+	}
+}
+
+@keyframes intro-progress {
+	from {
+		transform: scaleX(0.08); /* Inicia barra quase vazia. */
+		opacity: 0.35; /* Mantem inicio suave da barra. */
+	}
+
+	to {
+		transform: scaleX(1); /* Completa preenchimento da barra. */
+		opacity: 1; /* Finaliza com brilho total. */
+	}
+}
+
+@keyframes intro-out {
+	0% {
+		opacity: 1; /* Mantem estado inicial antes de sair. */
+		transform: scale(1); /* Evita salto visual no inicio da saida. */
+	}
+
+	100% {
+		opacity: 0; /* Dissolve o overlay por completo. */
+		transform: scale(1.02); /* Pequena expansao para parecer mais organico. */
+		visibility: hidden; /* Remove da renderizacao apos finalizar. */
+	}
+}
+
 
 @media (min-width: 1200px) {
 	main {
@@ -240,7 +365,7 @@ h1 {
 @media (max-width: 900px) {
 	main {
 		width: min(760px, 94vw); /* Ajusta area util para tablets e notebooks menores. */
-		padding-top: 4rem; /* Reduz espaco superior para equilibrar composicao. */
+		padding-top: clamp(2.6rem, 6vh, 4rem); /* Reduz espaco superior para equilibrar composicao. */
 	}
 
 	.profiles {
@@ -255,8 +380,12 @@ h1 {
 
 @media (max-width: 600px) {
 	main {
-		padding-top: 3.2rem; /* Reduz espaco superior em telas pequenas. */
+		padding-top: clamp(2.2rem, 5vh, 3.2rem); /* Reduz espaco superior em telas pequenas. */
 		padding-bottom: 2rem; /* Mantem conteudo bem distribuido no mobile. */
+	}
+
+	.intro-kicker {
+		letter-spacing: 0.14em; /* Evita excesso de espacamento em telas menores. */
 	}
 
 	.theme-actions {
@@ -276,6 +405,15 @@ h1 {
 
 	.profile {
 		max-width: 160px; /* Ajusta largura maxima do card no mobile. */
+	}
+}
+
+@media (hover: none) {
+	.profile button:hover img,
+	.profile button:hover figcaption {
+		transform: none; /* Evita estados de hover persistentes em telas touch. */
+		box-shadow: var(--image-shadow); /* Mantem sombra padrao em dispositivos touch. */
+		letter-spacing: normal;
 	}
 }
 

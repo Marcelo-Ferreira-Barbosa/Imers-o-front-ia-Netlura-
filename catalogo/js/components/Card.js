@@ -10,10 +10,13 @@ export function createCard(item) {
     const img = document.createElement('img');
     img.src = item.img;
     img.alt = `Movie cover`;
+    img.loading = 'lazy';
+    img.decoding = 'async';
 
     const iframe = document.createElement('iframe');
     iframe.frameBorder = "0";
     iframe.allow = "autoplay; encrypted-media";
+    iframe.loading = 'lazy';
 
     const videoId = getYouTubeId(item.youtube);
 

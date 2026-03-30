@@ -1,6 +1,7 @@
 const THEME_STORAGE_KEY = "theme";
 const DARK_THEME = "dark";
 const LIGHT_THEME = "light";
+const INTRO_ACTIVE_CLASS = "intro-active";
 
 const toggleButton = document.getElementById("theme-toggle");
 
@@ -75,5 +76,28 @@ function setupProfileNavigation() {
 	});
 }
 
+function setupIntroSequence() {
+	const introScreen = document.querySelector("[data-intro]");
+
+	if (!introScreen) {
+		document.body.classList.remove(INTRO_ACTIVE_CLASS);
+		return;
+	}
+
+	const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+	const introHoldDuration = prefersReducedMotion ? 120 : 1550;
+	const introOutDuration = prefersReducedMotion ? 120 : 700;
+
+	window.setTimeout(() => {
+		introScreen.classList.add("is-leaving");
+		document.body.classList.remove(INTRO_ACTIVE_CLASS);
+
+		window.setTimeout(() => {
+			introScreen.remove();
+		}, introOutDuration + 60);
+	}, introHoldDuration);
+}
+
+setupIntroSequence();
 setupThemeToggle();
 setupProfileNavigation();

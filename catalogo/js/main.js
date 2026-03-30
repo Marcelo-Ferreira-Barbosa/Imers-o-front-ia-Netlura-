@@ -16,9 +16,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('main-content');
     
     if (container) {
+        const fragment = document.createDocumentFragment();
         categories.forEach(category => {
             const carousel = createCarousel(category);
-            container.appendChild(carousel);
+            fragment.appendChild(carousel);
         });
+        container.appendChild(fragment);
     }
 });
